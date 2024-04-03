@@ -12,6 +12,14 @@ import pkg from '../../../package.json';
 // Store
 import useUserSOLBalanceStore from '../../stores/useUserSOLBalanceStore';
 
+//Added:
+import { CandyMint } from '../../components/CandyMint';
+import { CreateCollection } from '../../components/CreateCollection';
+import { Test } from '../../components/Test';
+import { Create } from '../../components/Create';
+import { Gallery } from '../../components/Gallery';
+
+
 export const HomeView: FC = ({ }) => {
   const wallet = useWallet();
   const { connection } = useConnection();
@@ -50,6 +58,7 @@ export const HomeView: FC = ({ }) => {
         </div>
         <div className="flex flex-col mt-2">
           <RequestAirdrop />
+          <Gallery/>
           <h4 className="md:w-full text-2xl text-slate-300 my-2">
           {wallet &&
           <div className="flex flex-row justify-center">
