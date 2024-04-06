@@ -2,9 +2,11 @@
 
 ![](public/display_title.png) 
 
-The Decentralized Marketplace to Tokenize and Monetize your data into Encrypted NFTs.
+## The Decentralized Marketplace to Tokenize and Monetize your data into Encrypted NFTs.
 
-The Solana dApp Scaffold repos are meant to house good starting scaffolds for ecosystem developers to get up and running quickly with a front end client UI that integrates several common features found in dApps with some basic usage examples. Wallet Integration. State management. Components examples. Notifications. Setup recommendations.
+
+## Empowering Encrypted NFTs for Secure Tokenized Data:
+![](public/structure.png)
 
 ## Getting Started
 
@@ -40,5 +42,5 @@ Sell In Home Page
 Example NFT On Sell In
 ![](public/nft_display.png) 
 
-Minting NFTs On Sell IN
+Minting NFTs On Sell In
 ![](public/nft_mint.png)
