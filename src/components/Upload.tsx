@@ -1,68 +1,51 @@
 "use client";
-
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { useState, useRef } from "react";
 import { NextResponse, NextRequest } from "next/server";
 import { Connection, clusterApiUrl, Keypair, PublicKey } from "@solana/web3.js";
 import axios from 'axios';
+import {
+  Steps,
+  Row,
+  Button,
+  Upload,
+  Col,
+  Input,
+  Statistic,
+  Slider,
+  Progress,
+  Spin,
+  InputNumber,
+  Form,
+  Typography,
+  Space,
+} from 'antd';
 
-export const Upload = ()=>{
-  const [file, setFile] = useState("");
+const {Dragger} = Upload;
+
+export const UploadNFT = ()=>{
+  const wallet = useWallet();
+  //const [file, setFile] = useState("");
+  const [file, setFile] = useState<any>(null);
   const [cid, setCid] = useState("");
   const [uploading, setUploading] = useState(false);
 
   const inputFile = useRef(null);
+  const [imageUrl, setImageUrl] = useState(null);
 
   const uploadFile = async (fileToUpload) => {
     try {
+      setUploading(true);
       const data = new FormData();
-      data.set("image", fileToUpload);
-      console.log("Data:", data);
-
+      data.set("file", fileToUpload);
       const res = await fetch("/api/upload", {
         method: "POST",
-        body: data,
+        body: data
       });
-      
-      
-      /*const data = new FormData();
-      data.append("file", fileToUpload);
-      console.log(fileToUpload);
-      const res = await fetch("/api/ipfs/route", {
-        method: "POST",
-        body: data,
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      /*const res = await axios.post('/api/upload', data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log(res.data.message);
-      console.log(res.data.file);
-      /*setUploading(true);
-      const data = new FormData();
-      data.append("file", fileToUpload);
-      console.log(data);
-      console.log(fileToUpload);
-      console.log("Get Method:", data.get("file"))
-      console.log("JWT:", process.env.NEXT_PUBLIC_PINATA_JWT);
-      const res = await fetch("/api/ipfs/route", {
-        method: "POST",
-        body: data,
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      console.log("Response:", res)
       const resData = await res.json();
-      console.log("Image Uploaded to IPFS:", resData.IpfsHash);
-      console.log("Link:", `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${ resData.IpfsHash}`)
       setCid(resData.IpfsHash);
       setUploading(false);
-      console.log(resData.response.get("file"))*/
-
+      return `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${resData.IpfsHash}`
     } catch (e) {
       console.log(e);
       setUploading(false);
@@ -70,21 +53,12 @@ export const Upload = ()=>{
     }
   };
 
-  const handleChange = (e) => {
-    setFile(e.target.files[0]);
-    uploadFile(e.target.files[0]);
-  };
-
-  const uploadJSON = async () =>{
+  const uploadJSON = async (imageUrl) =>{
     const jsonData = {
       "name": "ExampleJSON",
       "age": "18",
       "job": "programmer"
     };
-
-    //let secretKey: Uint8Array= decode("4vQ9TisZY57w8NhvgKudoVe9WNPBWoLjQoYsKEJgGsrQYtRoBNz6Q6BzZwpy2KqYEAKhk9iZJ1xbhyEL4dz4NQkL");
-    const wallet=  Keypair.generate();
-    console.log("Key:",wallet.publicKey);
     
     const CONFIG = {
       uploadPath: 'uploads/',
@@ -107,13 +81,13 @@ export const Upload = ()=>{
     const metadata = {
       name: "NFT Name",
       description: "This is NFT Description",
-      image: "https://ivory-vivacious-rooster-272.mypinata.cloud/ipfs/QmV9Q8v6thK9pVHav3NvLau75etQrprYKmn7V9jhk6yDV4/collection.png",
+      image: imageUrl,
       attributes: CONFIG.attributes,
       properties:{
         files:[
           {
             type: CONFIG.imgType,
-            uri: "https://ivory-vivacious-rooster-272.mypinata.cloud/ipfs/QmV9Q8v6thK9pVHav3NvLau75etQrprYKmn7V9jhk6yDV4/collection.png",
+            uri: imageUrl,
           },
         ]
       }
@@ -124,8 +98,7 @@ export const Upload = ()=>{
       const blob = new Blob([JSON.stringify(metadata)], { type: "application/json" });
       const data = new FormData();
       data.append("file", blob);
-
-      const res = await fetch("/api/files", {
+      const res = await fetch("/api/upload", {
         method: "POST",
         body: data,
       });
@@ -138,19 +111,77 @@ export const Upload = ()=>{
     }
   }
 
+  const handleUpload = async ()=>{
+    setImageUrl(URL.createObjectURL(file));
+    console.log("Uploading Image")
+    const ipfsUrl = await uploadFile(file);
+    console.log("Image Uploaded to IPFS:", ipfsUrl);
+    console.log("Uploading Metadata")
+    const metadataUrl = await uploadJSON(ipfsUrl);
+  }
+
+  const handleChange = async (fileToUpload) => {
+    setFile(fileToUpload);
+    // setImageUrl(URL.createObjectURL(fileToUpload));
+    // console.log("Uploading Image")
+    // const ipfsUrl = await uploadFile(fileToUpload);
+    // console.log("Image Uploaded to IPFS:", ipfsUrl);
+    // console.log("Uploading Metadata")
+    // const metadataUrl = await uploadJSON(ipfsUrl);
+  };
+
   return (
     <main className="w-full min-h-screen m-auto flex flex-col justify-center items-center">
-      <input type="file" id="file" ref={inputFile} onChange={handleChange} />
+      <Upload.Dragger
+        accept=".png,.jpg,.gif,.mp4,.svg"
+        style={{ padding: 20, color: "red !important" }}
+        fileList={file ? [file as any] : []}
+        onChange={
+          info =>{
+            handleChange(info.file.originFileObj); 
+            //setFile(info.file.originFileObj);
+            //uploadFile(info.file.originFileObj);
+          }
+        }
+        multiple={false}
+      >
+        <div className="ant-upload-drag-icon">
+          <h3 style={{ fontWeight: 700, color: "red" }}>
+            Upload your cover image (PNG, JPG, GIF, SVG)
+          </h3>
+        </div>
+        <p style={{ color: "red" }} className="ant-upload-text">
+          Drag and drop, or click to browse
+        </p>
+      </Upload.Dragger>
+      <button onClick={handleUpload}>Upload File</button>
+
+      {/*<input type="file" id="file" ref={inputFile} onChange={handleChange} />
       <button disabled={uploading} onClick={() => inputFile.current.click()}>
         {uploading ? "Uploading..." : "Upload"}
-      </button>
+      </button>*/}
       {cid && (
+        <>
         <img
           src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
           alt="Image from IPFS"
         />
+        {file && (
+          <div>
+            <h2>Uploaded File:</h2>
+            <p>Name: {file.name}</p>
+            <p>Type: {file.type}</p>
+            <p>Size: {file.size} bytes</p>
+            {file.type.startsWith('image/') && (
+              <div>
+                <h3>Preview:</h3>
+                <img src={imageUrl} alt="Uploaded file" style={{ maxWidth: '100%' }} />
+              </div>
+            )}
+          </div>
+        )}
+        </>
       )}
-      <button onClick={uploadJSON}>Upload JSON</button>
     </main>
   );
 }

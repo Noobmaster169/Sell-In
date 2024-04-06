@@ -1,37 +1,34 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextResponse, NextRequest } from "next/server";
-import multer from 'multer';
+//import multer from 'multer';
 
-export const config = { runtime: 'edge'};
-
+export const dynamic = 'force-dynamic'
   
-export default async function POST(request: NextRequest) {
+export const config = {
+  api: {
+      bodyParser: false,
+  },
+};
+
+export async function POST(request: NextRequest) {
     try {
-        console.log("Displaying Shit")
-
-        const formData = await request.formData();
-        const file = formData.getAll('files')[0]
-
-        console.log(formData)
-        // const file = await request.formData
+        const data = await request.formData();
+        const file: File | null = data.get("file") as unknown as File;
+        data.append("file", file);
+        data.append("pinataMetadata", JSON.stringify({ name: "File to upload" }));
         // console.log("File:", typeof(file))
         // console.log(file)
         //const data = await request.formData();
         //const file: File | null = data.get("file") as unknown as File;
-        console.log("Successful");
-        const data:any = null;
-        data.append("file", file);
-        data.append("pinataMetadata", JSON.stringify({ name: "File to upload" }));
         const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${process.env.PINATA_JWT}`,
-        },
-        body: data,
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
+            },
+            body: data,
         });
         const { IpfsHash } = await res.json();
-        console.log(IpfsHash);
-
+        console.log("IPFS Hash:", IpfsHash);
         return NextResponse.json({ IpfsHash }, { status: 200 });
     } catch (e) {
         console.log("Error:", e);
@@ -42,14 +39,16 @@ export default async function POST(request: NextRequest) {
     }
 }
 
-const upload = multer({ dest: 'uploads/' });
+//const upload = multer({ dest: 'uploads/' });
 
 
 // export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 //     if (req.method === 'POST') {
         
-//         const data = await req.body.formData()
-//         console.log(data);
+//         // const data = await req.body.formData()
+
+//         console.log(req.body.data)
+//         // console.log(data);
 //         // upload.single('inputFile')(req, res, async function (err: any) {
 //         //     if (err) {
 //         //         // Error handling

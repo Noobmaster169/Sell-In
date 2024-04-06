@@ -29,3 +29,16 @@ a {
   background-color: #707070;
 }
 
+.ant-steps-item-title{
+  color: white !important;
+}
+.ant-upload-text{
+  color: white !important;
+}
+.ant-steps-icon-dot{
+  color:white !important;
+}
+.ant-upload-list-item-name{
+  color:white !important;
+}
+
