@@ -2,7 +2,7 @@
 
 ![](public/display_title.png) 
 
-## The Decentralized Marketplace to Tokenize and Monetize your data into Encrypted NFTs.
+The Decentralized Marketplace to Tokenize and Monetize your data into Encrypted NFTs.
 
 
 ## Empowering Encrypted NFTs for Secure Tokenized Data:
