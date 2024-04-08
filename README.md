@@ -4,6 +4,10 @@
 
 The Decentralized Marketplace to Tokenize and Monetize your data into Encrypted NFTs.
 
+## Links:
+- [Demo Video (1 minute)](https://youtu.be/fMATQ2lzTsE?si=-9o-uvqoKMtaHpYu)
+- [Pitch Video (1minute)](https://youtu.be/WPAjbi36pOY?si=6CmTWjXPaXoHJeMG)
+
 ## Empowering Encrypted NFTs for Secure Tokenized Data:
 ![](public/structure.png)
 
