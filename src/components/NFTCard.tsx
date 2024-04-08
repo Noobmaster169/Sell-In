@@ -6,6 +6,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import NFT from 'pages/nft/[id]';
 import { useRouter } from 'next/router';
+import AES from 'crypto-js/aes';
+import { enc } from 'crypto-js/core';
 
 
 const CardDisplay = styled.div`
@@ -79,6 +81,7 @@ export const NFTCard = ({id}) =>{
     const [description, setDescription] = useState('Loading...')
     const [category, setCategory] = useState('Loading...')
     const [royalty, setRoyalty] = useState('Loading...')
+    const [cipherUrl, setCipherUrl] = useState(null);
 
     const METAPLEX = Metaplex.make(connection)
         .use(walletAdapterIdentity(wallet))
@@ -98,10 +101,76 @@ export const NFTCard = ({id}) =>{
             setTitle(nft.json.name);
             setDescription(nft.json.description);
             setCategory(nft.json.category? nft.json.category : "Not Found")
+            try{
+                setCipherUrl(nft.json.privateMetadata);
+            }catch(e){
+                console.log("Private Metadata Not Found In The NFT")
+            }
         }catch(error){
             console.log(error);
             notify({ type: 'error', message: `NFT Not Found!`, description: error?.message });
             router.push('/');
+        }
+    }
+
+    /*!! This Function Hasn't Been Integrated With The Smart Contract !!*/
+    async function decryptData(){
+        console.log("Trying To Decrypt Data");
+        if(!cipherUrl){
+            notify({ type: 'error', message: `Private Metadata Not Found!`});
+            return;
+        }
+        try{
+            console.log("Fetching data from ipfs")
+            console.log("Fetched Link:", cipherUrl)
+            const res = await fetch(cipherUrl)
+            console.log("Response:", res);
+            const html = await res.text();
+            console.log("HTML:", html); // Log the HTML content
+            console.log("Decrypting Blob")
+            
+            //!! This is a temporary method to decrypt file. Will Be Integrated With Smart Contract !!
+            var decryptedFile = AES.decrypt(html, wallet.publicKey.toString()).toString(enc.Utf8); 
+            console.log(decryptedFile)
+            
+            const base64Data = decryptedFile.split(',')[1];
+            const binaryData = atob(base64Data);
+            // Create array buffer from binary data
+            const arrayBuffer = new ArrayBuffer(binaryData.length);
+            const view = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < binaryData.length; i++) {
+            view[i] = binaryData.charCodeAt(i);
+            }
+            // Get file type
+            const typeMatch = decryptedFile.match(/^data:(.+);base64/);
+            const fileType = typeMatch ? typeMatch[1] : 'application/octet-stream';
+
+            // Create blob
+            const blob = new Blob([arrayBuffer], { type: fileType });
+            let filename = title;
+            const extensionMatch = fileType.split("/")[1]
+            console.log("File Type:", fileType);
+            console.log("Extension:", extensionMatch);
+            if (extensionMatch) {
+            filename += `.${extensionMatch}`;
+            } else {
+            filename += '.bin';
+            }
+
+            // Download The File
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            console.log("Successful?????????")
+        }catch(error){
+            console.log(error)
+            notify({ type: 'error', message: `Data Decryption Process Failed!` });
+            return;
         }
     }
 
@@ -130,7 +199,9 @@ export const NFTCard = ({id}) =>{
                 <CardInformation>
                     <CardAttribute>
                         <AttributeTitle>Address:</AttributeTitle>
+                        <a href={`https://explorer.solana.com/address/${id}/metadata?cluster=devnet`} target="_blank">
                         <span>{id}</span>
+                        </a>
                     </CardAttribute>
                     <CardAttribute>
                         <AttributeTitle>Description:</AttributeTitle>
@@ -144,7 +215,7 @@ export const NFTCard = ({id}) =>{
                         <AttributeTitle>Price:</AttributeTitle>
                         <span>NOT LISTED</span>
                     </CardAttribute>
-                    <DecryptButton>
+                    <DecryptButton onClick={() => decryptData()}>
                         Decrypt NFT Data
                     </DecryptButton>
                 </CardInformation>

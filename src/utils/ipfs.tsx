@@ -52,3 +52,7 @@ export async function uploadJSON(fileToUpload){
     const resData = await res.json();
     return resData.IpfsHash;
 }
+
+export async function decryptData(fileUrl){
+    
+}

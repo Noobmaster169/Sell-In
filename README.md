@@ -2,10 +2,13 @@
 
 ![](public/display_title.png) 
 
-## The Decentralized Marketplace to Tokenize and Monetize your data into Encrypted NFTs.
+The Decentralized Marketplace to Tokenize and Monetize your data into Encrypted NFTs.
 
 
 ## Empowering Encrypted NFTs for Secure Tokenized Data:
+![](public/structure.png)
+
+This is How Your Data Looks Like On IPFS:
 ![](public/structure.png)
 
 ## Getting Started
@@ -44,3 +47,5 @@ Example NFT On Sell In
 
 Minting NFTs On Sell In
 ![](public/nft_mint.png)
+
+*This Project Uses ![Solana DApp Scaffold](https://github.com/solana-labs/dapp-scaffold/)

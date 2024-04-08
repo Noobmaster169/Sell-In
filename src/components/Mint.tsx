@@ -96,6 +96,7 @@ export const Mint = ()=> {
         setStep(nextStep);
     }
 
+     /*!! This Function Hasn't Been Integrated With The Smart Contract !!*/
     const encryptData = async () =>{
         return new Promise((resolve, reject) => {
             let encryptedCid = "empty";
@@ -103,7 +104,8 @@ export const Mint = ()=> {
             reader.readAsDataURL(privateMetadata);
             reader.onload = async function () {
                 try {
-                    var cipher = await AES.encrypt(reader.result, 'your-secret-key').toString(); 
+                    /*This is Temporary Method: Encryption Key Will Be Integrated With Smart Contract */
+                    var cipher = await AES.encrypt(reader.result, wallet.publicKey.toString()).toString(); 
                     console.log("Encryption Result:", cipher);
                     setEncryptedData(cipher);
                     console.log("Encrypted Data Updated");
@@ -116,7 +118,7 @@ export const Mint = ()=> {
                             {type: "encrypted", uri: `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${encryptedCid}`}
                         ] 
                     }));
-                    console.log("Properties Updated")
+                    notify({ type: 'success', message: 'Encryption successful!', txid: signature });
                     resolve(`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${encryptedCid}`); // Resolve the Promise with the encrypted CID
                 } catch (error) {
                     reject(error); // Reject the Promise if an error occurs

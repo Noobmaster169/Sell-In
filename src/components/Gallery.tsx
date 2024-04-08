@@ -89,10 +89,7 @@ export const Gallery = ()=> {
             for (const address of NFTAddress) {
                 
                 const mintAddress = new PublicKey(address);
-            
-                console.log("Searching for NFT:", address);
                 const nft: any = await METAPLEX.nfts().findByMint({ mintAddress }, { commitment: "finalized" });
-                console.log("NFT Found");
                 const imageUrl = nft.json.image;
                 
                 NFTDisplays.push(

@@ -1,10 +1,4 @@
 import { FC } from "react";
-import { SignMessage } from '../../components/SignMessage';
-import { SendTransaction } from '../../components/SendTransaction';
-import { SendVersionedTransaction } from '../../components/SendVersionedTransaction';
-import { Create } from '../../components/Create';
-import {UploadNFT} from '../../components/Upload';
-import {UploadEncrypted} from '../../components/UploadEncrypted';
 import {Mint} from '../../components/Mint';
 
 export const CreateView: FC = ({ }) => {
