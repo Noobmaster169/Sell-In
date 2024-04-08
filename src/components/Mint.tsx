@@ -118,7 +118,6 @@ export const Mint = ()=> {
                             {type: "encrypted", uri: `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${encryptedCid}`}
                         ] 
                     }));
-                    notify({ type: 'success', message: 'Encryption successful!', txid: signature });
                     resolve(`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${encryptedCid}`); // Resolve the Promise with the encrypted CID
                 } catch (error) {
                     reject(error); // Reject the Promise if an error occurs
@@ -167,6 +166,7 @@ export const Mint = ()=> {
         const metadataCid = await uploadJSON(nftMetadata);
         const metadataUri = `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${metadataCid}`
         console.log("Metadata URL:", metadataUri);
+        notify({ type: 'success', message: `NFT Metadata Uploaded!`});
         return metadataUri
     }
 
@@ -629,7 +629,7 @@ const CompletedSection = ({cid}) =>{
             <CompletionTitle>NFT Minting Completed!</CompletionTitle>
                 <div className="flex justify-content-center align-items-center w-100 mt-5" style={{ textAlign: 'center' }}>
                     <div style={{ margin: '0 auto' }}>
-                        <img alignContent="center" src={"https://ivory-vivacious-rooster-272.mypinata.cloud/ipfs/QmWvJwxPEHmFygSWWdWNeKqkYiZ5kufvjmd5jSkbBEPP62"} width="150" height="150" />
+                        <img src={"https://ivory-vivacious-rooster-272.mypinata.cloud/ipfs/QmWvJwxPEHmFygSWWdWNeKqkYiZ5kufvjmd5jSkbBEPP62"} width="150" height="150" />
                     </div>
                 </div>
             </ButtonContainer>

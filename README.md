@@ -4,12 +4,24 @@
 
 The Decentralized Marketplace to Tokenize and Monetize your data into Encrypted NFTs.
 
-
 ## Empowering Encrypted NFTs for Secure Tokenized Data:
 ![](public/structure.png)
 
 This is How Your Data Looks Like On IPFS:
 ![](public/structure.png)
+
+## Display
+
+Sell In Home Page
+![](public/homepage.png) 
+
+Example NFT On Sell In
+![](public/nft_display.png) 
+
+Minting NFTs On Sell In
+![](public/nft_mint.png)
+
+*This Project Uses [Solana DApp Scaffold](https://github.com/solana-labs/dapp-scaffold/)
 
 ## Getting Started
 
@@ -34,18 +46,3 @@ npm run dev
 # or
 yarn dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## Display
-
-Sell In Home Page
-![](public/homepage.png) 
-
-Example NFT On Sell In
-![](public/nft_display.png) 
-
-Minting NFTs On Sell In
-![](public/nft_mint.png)
-
-*This Project Uses ![Solana DApp Scaffold](https://github.com/solana-labs/dapp-scaffold/)

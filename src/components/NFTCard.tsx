@@ -71,7 +71,6 @@ const DecryptButton = styled.div`
 const quicknodeEndpoint = process.env.NEXT_PUBLIC_RPC || clusterApiUrl('devnet');
 
 export const NFTCard = ({id}) =>{
-    console.log("Displaying Card with Address:", id)
     const { connection } = useConnection();
     const wallet = useWallet();
     const router = useRouter();
@@ -93,8 +92,6 @@ export const NFTCard = ({id}) =>{
 
     async function searchNFT(mintAddress){
         try{
-            console.log("Mint Key:", mintAddress)
-            
             const nft: any = await METAPLEX.nfts().findByMint({ mintAddress }, { commitment: "finalized" });
             console.log("NFT:", nft.json)
             setImage(nft.json.image ); 
@@ -103,6 +100,7 @@ export const NFTCard = ({id}) =>{
             setCategory(nft.json.category? nft.json.category : "Not Found")
             try{
                 setCipherUrl(nft.json.privateMetadata);
+                console.log("Private Metadata:", nft.json.privateMetadata);
             }catch(e){
                 console.log("Private Metadata Not Found In The NFT")
             }
@@ -177,7 +175,6 @@ export const NFTCard = ({id}) =>{
     useEffect(() => {
         try{
             const mintAddress = new PublicKey(id);
-            console.log("Mint Address:", mintAddress);
             searchNFT(mintAddress)
         }catch(error){
             console.log(error);
